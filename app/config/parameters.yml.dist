@@ -13,6 +13,7 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+    api.secret: ThisTokenIsNotSoSecretChangeIt
 
     debug_toolbar:          true
     debug_redirects:        false
