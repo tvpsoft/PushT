@@ -162,4 +162,49 @@ class UserController extends BaseApiController
             );
         }
     }
+
+
+    /**
+     * @return array
+     * @View()
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="User Settings GCM Api Key etc.",
+     *  parameters={
+     *      {"name"="PushT-Secret", "dataType"="string", "required"="true", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
+     *      {"name"="PushT-Token", "dataType"="string", "required"="true", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
+     *      {"name"="gcmApiKey", "dataType"="string", "required"="false"},
+     *  }
+     * )
+     */
+    public function postUserSettingsAction()
+    {
+        $request = Request::createFromGlobals();
+
+        $data = array(
+            'pushtSecret'  => $request->headers->get('PushT-Secret'),
+            'token' => $request->headers->get('PushT-Token'),
+        );
+        $userValidator = $this->container->get('validator.user');
+        $violations = $userValidator->defaultValidator($data);
+        if ($violations->count()) {
+            return $userValidator->error($violations);
+        } else {
+            $user = $userValidator->getUser();
+
+            if ($request->request->has('gcmApiKey')) {
+                $user->setAndroidGCMApiKey($request->request->get('gcmApiKey'));
+            }
+
+            $this->getDm()->persist($user);
+            $this->getDm()->flush();
+
+            return new JsonResponse(
+                array(
+                    'success' => true
+                )
+            );
+        }
+    }
 }

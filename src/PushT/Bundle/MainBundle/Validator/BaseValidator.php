@@ -185,7 +185,7 @@ class BaseValidator
      */
     public function checkUserAuthorized($token, $context)
     {
-        $user = $this->getEm()->getRepository('MainBundle:User')->findOneBy(array('confirmationToken' => $token));
+        $user = $this->getDm()->getRepository('MainBundle:User')->findOneBy(array('confirmationToken' => $token));
         if (!$user) {
             $context->addViolation('Error on token parameter', array('code' => 103), null);
         } else {

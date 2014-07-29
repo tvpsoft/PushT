@@ -16,9 +16,14 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 class User extends BaseUser
 {
     /**
-     * @MongoDB\Id(strategy="auto")
+     * @MongoDB\Id(strategy="UUID")
      */
     protected $id;
+
+    /**
+     * @MongoDB\String
+     */
+    protected $androidGCMApiKey;
 
     public function __construct()
     {
@@ -40,6 +45,22 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param mixed $androidGCMApiKey
+     */
+    public function setAndroidGCMApiKey($androidGCMApiKey)
+    {
+        $this->androidGCMApiKey = $androidGCMApiKey;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAndroidGCMApiKey()
+    {
+        return $this->androidGCMApiKey;
     }
 
 
