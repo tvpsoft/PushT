@@ -1,8 +1,9 @@
-api:
+
+pusht_api:
+    type: rest
+    prefix: /api
     resource: "@ApiBundle/Resources/config/routing.yml"
-    prefix:   /
 
-main:
-    resource: "@MainBundle/Resources/config/routing.yml"
-    prefix:   /
-
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc

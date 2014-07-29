@@ -185,7 +185,7 @@ class BaseValidator
      */
     public function checkUserAuthorized($token, $context)
     {
-        $user = $this->getEm()->getRepository('ApiBundle:User')->findOneBy(array('confirmationToken' => $token));
+        $user = $this->getEm()->getRepository('MainBundle:User')->findOneBy(array('confirmationToken' => $token));
         if (!$user) {
             $context->addViolation('Error on token parameter', array('code' => 103), null);
         } else {
@@ -212,7 +212,7 @@ class BaseValidator
      */
     public function checkSecretKey($secretKey, $context)
     {
-        $secret = $this->container->getParameter('secret_key');
+        $secret = $this->container->getParameter('api.secret');
         if ($secret != $secretKey) {
             $context->addViolation('Error on secret key', array('code' => 100), null);
         }
@@ -226,7 +226,7 @@ class BaseValidator
      */
     public function checkUsernameNotRegistered($username, $context)
     {
-        $user = $this->getDm()->getRepository('ApiBundle:User')->findBy(array('username' => $username));
+        $user = $this->getDm()->getRepository('MainBundle:User')->findBy(array('username' => $username));
         if ($user) {
             $context->addViolation('Username already taken', array('code' => 101), null);
         }
@@ -240,7 +240,7 @@ class BaseValidator
      */
     public function checkMailNotRegistered($email, $context)
     {
-        $user = $this->getDm()->getRepository('ApiBundle:User')->findOneBy(array('email' => $email));
+        $user = $this->getDm()->getRepository('MainBundle:User')->findOneBy(array('email' => $email));
         if ($user) {
             $context->addViolation('Email address already using', array('code' => 102), null);
         }

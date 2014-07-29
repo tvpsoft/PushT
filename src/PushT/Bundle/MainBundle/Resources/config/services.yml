@@ -2,6 +2,8 @@ parameters:
 #    main.example.class: PushT\Bundle\MainBundle\Example
 
 services:
-#    main.example:
-#        class: %main.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+  validator.user:
+          class: PushT\Bundle\MainBundle\Validator\UserValidator
+          arguments:
+              container: "@service_container"
+              securityContext: "@security.context"

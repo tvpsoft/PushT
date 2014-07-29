@@ -51,12 +51,6 @@ class UserValidator extends BaseValidator {
                     array($this, 'checkUsernameNotRegistered')
                 ))),
             ),
-            'name'  => array(
-                $this->getNotBlank('Name'),
-            ),
-            'surname'  => array(
-                $this->getNotBlank('Surname'),
-            ),
             'password'  => array(
                 $this->getNotBlank('Password'),
                 $this->length,

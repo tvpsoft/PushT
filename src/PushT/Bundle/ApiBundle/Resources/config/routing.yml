@@ -1,0 +1,5 @@
+user:
+    type: rest
+    prefix: /v1
+    resource: @ApiBundle/Controller/UserController.php
+    name_prefix:  api_1_

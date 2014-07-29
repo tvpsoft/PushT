@@ -5,13 +5,14 @@
  * Time: 23:07
  */
 
-namespace PushT\Bundle\MainBundle\Controller;
+namespace PushT\Bundle\ApiBundle\Controller;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\Controller\FOSRestController;
 
-class BaseController extends Controller
+
+class BaseApiController extends FOSRestController
 {
     /** @var  DocumentManager */
     private $dm;
@@ -25,7 +26,7 @@ class BaseController extends Controller
     public function getDm()
     {
         if ($this->dm === null) {
-            $this->dm = $this->get('doctrine_mongodb')->getManager();
+            $this->dm = $this->container->get('doctrine_mongodb')->getManager();
         }
         return $this->dm;
     }
