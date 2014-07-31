@@ -3,3 +3,9 @@ user:
     prefix: /v1
     resource: @ApiBundle/Controller/UserController.php
     name_prefix:  api_1_
+
+push:
+    type: rest
+    prefix: /v1
+    resource: @ApiBundle/Controller/PushController.php
+    name_prefix:  api_1_

@@ -7,3 +7,12 @@ services:
           arguments:
               container: "@service_container"
               securityContext: "@security.context"
+  validator.push:
+          class: PushT\Bundle\MainBundle\Validator\PushValidator
+          arguments:
+              container: "@service_container"
+              securityContext: "@security.context"
+  rabbitmq.push.service:
+                  class: PushT\Bundle\MainBundle\Consumer\PushConsumer
+                  arguments:
+                      container: "@service_container"

@@ -10,6 +10,7 @@ namespace PushT\Bundle\ApiBundle\Controller;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use FOS\RestBundle\Controller\FOSRestController;
+use OldSound\RabbitMqBundle\RabbitMq\Producer;
 
 
 class BaseApiController extends FOSRestController
@@ -19,6 +20,9 @@ class BaseApiController extends FOSRestController
 
     /** @var  DocumentRepository */
     private $userTable;
+
+    /** @var  Producer */
+    private $pushProducer;
 
     /**
      * @return DocumentManager
@@ -40,5 +44,13 @@ class BaseApiController extends FOSRestController
             $this->userTable = $this->getDm()->getRepository('MainBundle:User');
         }
         return $this->userTable;
+    }
+
+    public function publishPush($data)
+    {
+        if ($this->pushProducer === null) {
+            $this->pushProducer = $this->get('old_sound_rabbit_mq.push_service_producer');
+        }
+        $this->pushProducer->publish(serialize($data));
     }
 }

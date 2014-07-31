@@ -18,3 +18,12 @@ parameters:
     debug_toolbar:          true
     debug_redirects:        false
     use_assetic_controller: true
+
+    rabbitmq_connection:
+            default:
+                host:     'localhost'
+                port:     5672
+                user:     'guest'
+                password: 'guest'
+                vhost:    '/pusht'
+                lazy:     false

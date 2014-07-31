@@ -81,3 +81,16 @@ doctrine_mongodb:
     document_managers:
         default:
             auto_mapping: true
+
+old_sound_rabbit_mq:
+    connections: %rabbitmq_connection%
+    producers:
+        push_service:
+            connection:       default
+            exchange_options: {name: 'push_service', type: direct}
+    consumers:
+        push_service:
+            connection:       default
+            exchange_options: {name: 'push_service', type: direct}
+            queue_options:    {name: 'push_service'}
+            callback:         rabbitmq.push.service
