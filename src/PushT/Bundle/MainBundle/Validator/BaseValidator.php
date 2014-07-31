@@ -83,6 +83,7 @@ class BaseValidator
         ));
 
         $violations = $validator->validateValue($input, $constraint);
+
         return $violations;
     }
 
@@ -109,6 +110,7 @@ class BaseValidator
             }
             $violationErrors[] = $data;
         }
+
         return $violationErrors;
     }
 
@@ -119,6 +121,7 @@ class BaseValidator
         foreach ($violations as $violate) {
             $violationErrors[] = $violate->getMessage();
         }
+
         return implode($divider, $violationErrors);
     }
 
@@ -130,6 +133,7 @@ class BaseValidator
     {
         $violationErrors = $this->parseViolationErrors($violations);
         $violationsString = $this->parseViolationsToString($violations);
+
         return new JsonResponse(
             array(
                 'success' => false,
@@ -148,11 +152,12 @@ class BaseValidator
     {
         $this->notBlank = new NotBlank();
         $this->notBlank->message = $fieldName.' can not be empty';
+
         return $this->notBlank;
     }
 
     /**
-     * @param array $options
+     * @param  array  $options
      * @param $fieldName
      * @return Length
      */
@@ -160,6 +165,7 @@ class BaseValidator
     {
         $this->length = new Length($options);
         $this->length->minMessage = $fieldName.' must be at least {{ limit }} characters.';
+
         return $this->length;
     }
 
@@ -174,6 +180,7 @@ class BaseValidator
             'min' => $min,
             'max' => $max,
         ));
+
         return $this->range;
     }
 
@@ -246,7 +253,6 @@ class BaseValidator
         }
     }
 
-
     /**
      * @param $token
      * @param $context LegacyExecutionContext
@@ -263,6 +269,7 @@ class BaseValidator
         if ($this->dm === null) {
             $this->dm = $this->container->get('doctrine_mongodb')->getManager();
         }
+
         return $this->dm;
     }
 

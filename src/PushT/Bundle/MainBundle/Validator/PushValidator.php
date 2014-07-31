@@ -13,7 +13,8 @@ use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Validation;
 
-class PushValidator extends BaseValidator {
+class PushValidator extends BaseValidator
+{
     /**
      * @param $container Container
      * @param $securityContext SecurityContext
@@ -55,6 +56,7 @@ class PushValidator extends BaseValidator {
         ));
 
         $violations = $validator->validateValue($input, $constraint);
+
         return $violations;
     }
 }

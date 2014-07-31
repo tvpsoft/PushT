@@ -49,6 +49,7 @@ class UserController extends BaseApiController
         if ($violations->count()) {
             $violationErrors = $userValidator->parseViolationErrors($violations);
             $violationsString = $userValidator->parseViolationsToString($violations, ' #$# ');
+
             return new JsonResponse(
                 array(
                     'success' => false,
@@ -66,7 +67,6 @@ class UserController extends BaseApiController
                 ->setEnabled(1)
                 ->setConfirmationToken(Helper::randomString(100));
             $userManager->updateUser($user);
-
 
             $token = new UsernamePasswordToken($user, $user->getPassword(), "main", $user->getRoles());
             $this->get("security.context")->setToken($token);
@@ -145,6 +145,7 @@ class UserController extends BaseApiController
             $user->addRole('ROLE_ADMIN');
             $this->getDm()->persist($user);
             $this->getDm()->flush();
+
             return new JsonResponse(
                 array(
                     'success'       => true,
@@ -162,7 +163,6 @@ class UserController extends BaseApiController
             );
         }
     }
-
 
     /**
      * @return array

@@ -12,7 +12,6 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
 use FOS\RestBundle\Controller\FOSRestController;
 use OldSound\RabbitMqBundle\RabbitMq\Producer;
 
-
 class BaseApiController extends FOSRestController
 {
     /** @var  DocumentManager */
@@ -32,6 +31,7 @@ class BaseApiController extends FOSRestController
         if ($this->dm === null) {
             $this->dm = $this->container->get('doctrine_mongodb')->getManager();
         }
+
         return $this->dm;
     }
 
@@ -43,6 +43,7 @@ class BaseApiController extends FOSRestController
         if ($this->userTable === null) {
             $this->userTable = $this->getDm()->getRepository('MainBundle:User');
         }
+
         return $this->userTable;
     }
 

@@ -7,7 +7,6 @@
 
 namespace PushT\Bundle\MainBundle\Model;
 
-
 class Helper
 {
     private static $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -18,6 +17,7 @@ class Helper
         for ($i = 0; $i < $length; $i++) {
             $randomString .= self::$characters[rand(0, strlen(self::$characters) - 1)];
         }
+
         return $randomString;
     }
 
@@ -38,6 +38,7 @@ class Helper
         ));
         $resp = json_decode(curl_exec($curl), 1);
         curl_close($curl);
+
         return $resp;
     }
 
@@ -55,13 +56,14 @@ class Helper
         ));
         $resp = json_decode(curl_exec($curl), 1);
         curl_close($curl);
+
         return $resp;
     }
 
     public static function slugify($str, $replace = array(), $delimiter='-')
     {
         if (!empty($replace)) {
-            $str = str_replace((array)$replace, ' ', $str);
+            $str = str_replace((array) $replace, ' ', $str);
         }
 
         $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);

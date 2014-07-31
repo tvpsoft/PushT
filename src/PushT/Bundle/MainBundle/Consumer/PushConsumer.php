@@ -9,7 +9,6 @@ namespace PushT\Bundle\MainBundle\Consumer;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
-use Doctrine\ORM\EntityManager;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use PushT\Bundle\MainBundle\Document\Push;
@@ -31,7 +30,8 @@ class PushConsumer implements ConsumerInterface
     /** @var  DocumentRepository */
     private $pushTable;
 
-    public function __construct($container){
+    public function __construct($container)
+    {
         $this->container    = $container;
     }
 
@@ -40,6 +40,7 @@ class PushConsumer implements ConsumerInterface
 //TODO Push Send Service
         throw new NotImplementedException('Push Consumer');
         $data = unserialize($msg->body);
+
         return false;
     }
 
@@ -56,6 +57,7 @@ class PushConsumer implements ConsumerInterface
         if ($this->dm === null) {
             $this->dm = $this->container->get('doctrine_mongodb')->getManager();
         }
+
         return $this->dm;
     }
 
@@ -67,6 +69,7 @@ class PushConsumer implements ConsumerInterface
         if ($this->userTable === null) {
             $this->userTable = $this->getDm()->getRepository('MainBundle:User');
         }
+
         return $this->userTable;
     }
 
@@ -78,6 +81,7 @@ class PushConsumer implements ConsumerInterface
         if ($this->pushTable === null) {
             $this->pushTable = $this->getDm()->getRepository('MainBundle:Push');
         }
+
         return $this->pushTable;
     }
 }

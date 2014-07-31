@@ -74,7 +74,7 @@ class Push
      */
     protected $timeToLive;
 
-    function __construct()
+    public function __construct()
     {
         $this->createdAt = time();
         $this->updatedAt = time();
@@ -256,6 +256,5 @@ class Push
     {
         return $this->userId;
     }
-
 
 }
