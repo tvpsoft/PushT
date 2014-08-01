@@ -22,7 +22,7 @@ class Push
     /**
      * @MongoDB\String
      */
-    protected $userId;
+    protected $jobId;
 
     /**
      * @MongoDB\String
@@ -40,11 +40,6 @@ class Push
     protected $updatedAt;
 
     /**
-     * @MongoDB\String
-     */
-    protected $pushKey;
-
-    /**
      * @MongoDB\Int
      * 0 => On Queue
      * 1 => Successfully Sent
@@ -53,48 +48,11 @@ class Push
      */
     protected $status;
 
-    /**
-     * @MongoDB\Int
-     * 0 => Android, 1 => IOS, 2 => Windows
-     */
-    protected $type;
-
-    /**
-     * @MongoDB\String
-     */
-    protected $data;
-
-    /**
-     * @MongoDB\String
-     */
-    protected $collapseKey;
-
-    /**
-     * @MongoDB\Int
-     */
-    protected $timeToLive;
-
     public function __construct()
     {
         $this->createdAt = time();
         $this->updatedAt = time();
         $this->status    = 0;
-    }
-
-    /**
-     * @param mixed $collapseKey
-     */
-    public function setCollapseKey($collapseKey)
-    {
-        $this->collapseKey = $collapseKey;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCollapseKey()
-    {
-        return $this->collapseKey;
     }
 
     /**
@@ -111,22 +69,6 @@ class Push
     public function getCreatedAt()
     {
         return $this->createdAt;
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function setData($data)
-    {
-        $this->data = json_encode(json_decode($data));
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->data;
     }
 
     /**
@@ -162,19 +104,19 @@ class Push
     }
 
     /**
-     * @param mixed $pushKey
+     * @param mixed $jobId
      */
-    public function setPushKey($pushKey)
+    public function setJobId($jobId)
     {
-        $this->pushKey = $pushKey;
+        $this->jobId = $jobId;
     }
 
     /**
      * @return mixed
      */
-    public function getPushKey()
+    public function getJobId()
     {
-        return $this->pushKey;
+        return $this->jobId;
     }
 
     /**
@@ -194,38 +136,6 @@ class Push
     }
 
     /**
-     * @param mixed $timeToLive
-     */
-    public function setTimeToLive($timeToLive)
-    {
-        $this->timeToLive = $timeToLive;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTimeToLive()
-    {
-        return $this->timeToLive;
-    }
-
-    /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * @param mixed $updatedAt
      */
     public function setUpdatedAt($updatedAt)
@@ -241,20 +151,5 @@ class Push
         return $this->updatedAt;
     }
 
-    /**
-     * @param mixed $userId
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
 
 }

@@ -7,6 +7,7 @@
 
 namespace PushT\Bundle\ApiBundle\Controller;
 
+use PushT\Bundle\MainBundle\Document\Job;
 use PushT\Bundle\MainBundle\Document\Push;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +38,6 @@ class PushController extends BaseApiController
     public function postPushAction()
     {
         $request = Request::createFromGlobals();
-
         $data = array(
             'pushtSecret'  => $request->headers->get('PushT-Secret'),
             'token' => $request->headers->get('PushT-Token'),
@@ -52,17 +52,21 @@ class PushController extends BaseApiController
         } else {
             $user = $pushValidator->getUser();
 
+            $job = new Job();
+            $job->setUserId($user->getId());
+            $job->setData($data['data']);
+            $job->setType($data['type']);
+            $job->setCollapseKey($request->request->get('collapseKey'));
+            $job->setPushKey($request->request->get('pushKey'));
+            $job->setTimeToLive($request->request->get('timeToLive'));
+            $this->getDm()->persist($job);
+
             $pushArray = array();
             if (is_array($data['deviceTokens'])) {
                 foreach ($data['deviceTokens'] as $key => $deviceToken) {
                     $push = new Push();
-                    $push->setUserId($user->getId());
+                    $push->setJobId($job->getId());
                     $push->setDeviceToken($deviceToken);
-                    $push->setData($data['data']);
-                    $push->setType($data['type']);
-                    $push->setCollapseKey($request->request->get('collapseKey'));
-                    $push->setPushKey($request->request->get('pushKey'));
-                    $push->setTimeToLive($request->request->get('timeToLive'));
                     $this->getDm()->persist($push);
 
                     if ($key % 25 == 0) {
