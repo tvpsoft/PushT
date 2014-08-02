@@ -94,3 +94,9 @@ old_sound_rabbit_mq:
             exchange_options: {name: 'push_service', type: direct}
             queue_options:    {name: 'push_service'}
             callback:         rabbitmq.push.service
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: %redis_server%

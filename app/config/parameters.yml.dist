@@ -19,6 +19,8 @@ parameters:
     debug_redirects:        false
     use_assetic_controller: true
 
+    redis_server: redis://localhost
+
     rabbitmq_connection:
             default:
                 host:     'localhost'
