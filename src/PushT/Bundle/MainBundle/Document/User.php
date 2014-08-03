@@ -63,4 +63,14 @@ class User extends BaseUser
         return $this->androidGCMApiKey;
     }
 
+    public function toArray()
+    {
+        return array(
+            'userId'    => $this->getId(),
+            'username'  => $this->getUsername(),
+            'email'     => $this->getEmail(),
+            'googleApiKey' => $this->getAndroidGCMApiKey()
+        );
+    }
+
 }

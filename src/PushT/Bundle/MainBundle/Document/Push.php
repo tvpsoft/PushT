@@ -41,12 +41,24 @@ class Push
 
     /**
      * @MongoDB\Int
+     */
+    protected $bounce;
+
+    /**
+     * @MongoDB\Int
      * 0 => On Queue
      * 1 => Successfully Sent
      * 2 => Requeued,
-     * 3 => Deleted Device
+     * 3 => Deleted Device,
+     * 4 => Invalid Api Key - Waiting,
+     * 5 => Out of bounce
      */
     protected $status;
+
+    /**
+     * @MongoDB\String
+     */
+    protected $errorMessage;
 
     public function __construct()
     {
@@ -150,6 +162,47 @@ class Push
     {
         return $this->updatedAt;
     }
+
+    /**
+     * @param mixed $errorMessage
+     */
+    public function setErrorMessage($errorMessage)
+    {
+        $this->errorMessage = $errorMessage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getErrorMessage()
+    {
+        return $this->errorMessage;
+    }
+
+    /**
+     * @param mixed $bounce
+     */
+    public function setBounce($bounce)
+    {
+        $this->bounce = $bounce;
+    }
+
+    /**
+     *
+     */
+    public function incrBounce()
+    {
+        $this->bounce++;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBounce()
+    {
+        return $this->bounce;
+    }
+
 
 
 }

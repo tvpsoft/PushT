@@ -16,11 +16,15 @@ services:
                   class: PushT\Bundle\MainBundle\Consumer\PushConsumer
                   arguments:
                       container: "@service_container"
-     cache.job:
+  cache.job:
           class: PushT\Bundle\MainBundle\Cache\JobCache
           arguments:
               container: "@service_container"
-     cache.push:
+  cache.push:
           class: PushT\Bundle\MainBundle\Cache\PushCache
+          arguments:
+              container: "@service_container"
+  cache.user:
+          class: PushT\Bundle\MainBundle\Cache\UserCache
           arguments:
               container: "@service_container"

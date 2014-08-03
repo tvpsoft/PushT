@@ -14,7 +14,7 @@ class PushCache extends BaseCache
 {
     public function __construct($container)
     {
-        parent::__construct($container, 'job');
+        parent::__construct($container, 'push');
     }
 
 
@@ -34,7 +34,7 @@ class PushCache extends BaseCache
     {
         $push = $this->get($pushId);
         if (!$push) {
-            $push = $this->mongodb->getRepository('WaitressApiBundle:Comment')->find($pushId);
+            $push = $this->mongodb->getRepository('MainBundle:Push')->find($pushId);
             if ($push) {
                 $this->setPush($push);
             }

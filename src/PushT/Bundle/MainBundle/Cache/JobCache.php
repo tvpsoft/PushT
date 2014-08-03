@@ -33,7 +33,7 @@ class JobCache extends BaseCache
     {
         $job = $this->get($jobId);
         if (!$job) {
-            $job = $this->mongodb->getRepository('WaitressApiBundle:Comment')->find($jobId);
+            $job = $this->mongodb->getRepository('MainBundle:Job')->find($jobId);
             if ($job) {
                 $this->setJob($job);
             }

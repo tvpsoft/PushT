@@ -200,6 +200,9 @@ class UserController extends BaseApiController
             $this->getDm()->persist($user);
             $this->getDm()->flush();
 
+            $userCache = $this->get('cache.user');
+            $userCache->setUser($user);
+
             return new JsonResponse(
                 array(
                     'success' => true

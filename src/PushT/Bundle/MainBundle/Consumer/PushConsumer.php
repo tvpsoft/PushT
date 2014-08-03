@@ -11,7 +11,12 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use PushT\Bundle\MainBundle\Cache\JobCache;
+use PushT\Bundle\MainBundle\Cache\PushCache;
+use PushT\Bundle\MainBundle\Cache\UserCache;
+use PushT\Bundle\MainBundle\Document\Job;
 use PushT\Bundle\MainBundle\Document\Push;
+use PushT\Bundle\MainBundle\Document\User;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Intl\Exception\NotImplementedException;
 
@@ -30,6 +35,15 @@ class PushConsumer implements ConsumerInterface
     /** @var  DocumentRepository */
     private $pushTable;
 
+    /** @var  JobCache */
+    private $jobCache;
+
+    /** @var  PushCache */
+    private $pushCache;
+
+    /** @var  UserCache */
+    private $userCache;
+
     public function __construct($container)
     {
         $this->container    = $container;
@@ -37,16 +51,109 @@ class PushConsumer implements ConsumerInterface
 
     public function execute(AMQPMessage $msg)
     {
-//TODO Push Send Service
-        throw new NotImplementedException('Push Consumer');
-        $data = unserialize($msg->body);
+        /** @var Push $push */
+        $push = unserialize($msg->body);
 
-        return false;
+        $job = $this->getJobCache()->getJob($push->getJobId());
+        if ($job === null) {
+            $this->getDm()->remove($push);
+            $this->getDm()->flush();
+            //Returning true will be delete it from queue
+            return true;
+        }
+
+        if ($job->getType() == 0) {
+            $push =  $this->sendPushToAndroid($job, $push);
+        } else if ($job->getType() == 1) {
+            //TODO send to IOS
+        } else if ($job->getType() == 1) {
+            //TODO send to Windows
+        }
+
+        $this->updateData($job, $push);
+
+        switch ($push->getStatus()) {
+            case 0:
+                return false;
+            case 1:
+                return true;
+            case 2:
+                if ($push->getBounce() < 3) {
+                    $push->incrBounce();
+                    $this->updateData($job, $push);
+                    return false;
+                } else {
+                    $push->setStatus(5);
+                    $this->updateData($job, $push);
+                    return true;
+                }
+            case 3:
+                return true;
+            case 4:
+                return true;
+        }
     }
 
-    public function sendPushToAndroid($data)
+    /**
+     * @param $job Job
+     * @param $push Push
+     * @return Push
+     */
+    public function sendPushToAndroid($job, $push)
     {
-        //TODO: Android Send
+        $registrationIds = array($push->getDeviceToken());
+
+        $msg = json_decode($job->getData(), 1);
+        $msg['jobId'] = $job->getId();
+        $msg['msgId'] = $push->getId();
+
+        $fields = array(
+            'registration_ids' 	=> $registrationIds,
+            'data'				=> $msg
+        );
+
+        $user = $this->getUserCache()->getUser($job->getUserId());
+        if (!$user['googleApiKey']) {
+            $push->setStatus(4);
+            return $push;
+        }
+        $headers = array(
+            'Authorization: key=' . $user['googleApiKey'],
+            'Content-Type: application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://android.googleapis.com/gcm/send' );
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $result = json_decode(curl_exec($ch), 1);
+        curl_close($ch);
+        if ($result['success'] == 1) {
+            echo 'Android send'.PHP_EOL;
+            $push->setStatus(1);
+        } else {
+            echo '### Error => '.$result['results'][0]['error'].PHP_EOL;
+            $push->setErrorMessage($result['results'][0]['error']);
+            if ($result['results'][0]['error'] == 'InvalidRegistration') {
+                $push->setStatus(3);
+
+                /** @var User $user */
+                $user = $this->getUserTable()->find($user['userId']);
+                if ($user) {
+                    $user->setAndroidGCMApiKey(null);
+                    $this->getDm()->persist($user);
+                    $this->getDm()->flush();
+
+                    $this->getUserCache()->setUser($user);
+                }
+            } else {
+                $push->setStatus(2);
+            }
+        }
+        return $push;
     }
 
     /**
@@ -84,4 +191,55 @@ class PushConsumer implements ConsumerInterface
 
         return $this->pushTable;
     }
+
+    /**
+     * @return \PushT\Bundle\MainBundle\Cache\JobCache
+     */
+    public function getJobCache()
+    {
+        if ($this->jobCache === null) {
+            $this->jobCache = $this->container->get('cache.job');
+        }
+        return $this->jobCache;
+    }
+
+    /**
+     * @return \PushT\Bundle\MainBundle\Cache\PushCache
+     */
+    public function getPushCache()
+    {
+        if ($this->pushCache === null) {
+            $this->pushCache = $this->container->get('cache.push');
+        }
+        return $this->pushCache;
+    }
+
+    /**
+     * @return \PushT\Bundle\MainBundle\Cache\UserCache
+     */
+    public function getUserCache()
+    {
+        if ($this->userCache === null) {
+            $this->userCache = $this->container->get('cache.user');
+        }
+        return $this->userCache;
+    }
+
+    /**
+     * @param $job Job
+     * @param $push Push
+     */
+    private function updateData($job, $push)
+    {
+        $job->setUpdatedAt(time());
+        $push->setUpdatedAt(time());
+
+        $this->getDm()->persist($job);
+        $this->getDm()->persist($push);
+        $this->getDm()->flush();
+
+        $this->getPushCache()->setPush($push);
+        $this->getJobCache()->setJob($job);
+    }
+
 }
