@@ -18,7 +18,6 @@ use PushT\Bundle\MainBundle\Document\Job;
 use PushT\Bundle\MainBundle\Document\Push;
 use PushT\Bundle\MainBundle\Document\User;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Intl\Exception\NotImplementedException;
 
 class PushConsumer implements ConsumerInterface
 {
@@ -64,9 +63,9 @@ class PushConsumer implements ConsumerInterface
 
         if ($job->getType() == 0) {
             $push =  $this->sendPushToAndroid($job, $push);
-        } else if ($job->getType() == 1) {
+        } elseif ($job->getType() == 1) {
             //TODO send to IOS
-        } else if ($job->getType() == 1) {
+        } elseif ($job->getType() == 1) {
             //TODO send to Windows
         }
 
@@ -81,10 +80,12 @@ class PushConsumer implements ConsumerInterface
                 if ($push->getBounce() < 3) {
                     $push->incrBounce();
                     $this->updateData($job, $push);
+
                     return false;
                 } else {
                     $push->setStatus(5);
                     $this->updateData($job, $push);
+
                     return true;
                 }
             case 3:
@@ -108,13 +109,14 @@ class PushConsumer implements ConsumerInterface
         $msg['msgId'] = $push->getId();
 
         $fields = array(
-            'registration_ids' 	=> $registrationIds,
-            'data'				=> $msg
+            'registration_ids'    => $registrationIds,
+            'data'                => $msg
         );
 
         $user = $this->getUserCache()->getUser($job->getUserId());
         if (!$user['googleApiKey']) {
             $push->setStatus(4);
+
             return $push;
         }
         $headers = array(
@@ -153,6 +155,7 @@ class PushConsumer implements ConsumerInterface
                 $push->setStatus(2);
             }
         }
+
         return $push;
     }
 
@@ -200,6 +203,7 @@ class PushConsumer implements ConsumerInterface
         if ($this->jobCache === null) {
             $this->jobCache = $this->container->get('cache.job');
         }
+
         return $this->jobCache;
     }
 
@@ -211,6 +215,7 @@ class PushConsumer implements ConsumerInterface
         if ($this->pushCache === null) {
             $this->pushCache = $this->container->get('cache.push');
         }
+
         return $this->pushCache;
     }
 
@@ -222,6 +227,7 @@ class PushConsumer implements ConsumerInterface
         if ($this->userCache === null) {
             $this->userCache = $this->container->get('cache.user');
         }
+
         return $this->userCache;
     }
 

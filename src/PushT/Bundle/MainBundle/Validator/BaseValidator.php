@@ -8,6 +8,8 @@
 namespace PushT\Bundle\MainBundle\Validator;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
+use PushT\Bundle\MainBundle\Document\Job;
+use PushT\Bundle\MainBundle\Document\Push;
 use PushT\Bundle\MainBundle\Document\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints\Email;
@@ -26,11 +28,15 @@ class BaseValidator
 {
     /** @var  Container */
     protected $container;
+
     /** @var  DocumentManager */
     protected $dm;
 
     /** @var  NotBlank */
     protected $notBlank;
+
+    /** @var  Email */
+    protected $email;
 
     /** @var  Length */
     protected $length;
@@ -40,6 +46,12 @@ class BaseValidator
 
     /** @var  User */
     protected $user;
+
+    /** @var  Push */
+    protected $push;
+
+    /** @var  Job */
+    protected $job;
 
     /** @var  SecurityContext */
     protected $securityContext;
@@ -201,6 +213,32 @@ class BaseValidator
     }
 
     /**
+     * Checks that push belongs to user
+     *
+     * @param $pushId
+     * @param $context LegacyExecutionContext
+     */
+    public function checkPush($pushId, $context)
+    {
+        $user = $this->getUser();
+        if ($user) {
+            /** @var Push $push */
+            $push = $this->getDm()->getRepository('MainBundle:Push')->find($pushId);
+            if ($push) {
+                /** @var Job $job */
+                $job = $this->getDm()->getRepository('MainBundle:Job')->find($push->getJobId());
+                $this->push = $push;
+                $this->job  = $job;
+                if ($job->getUserId() != $user->getId()) {
+                    $context->addViolation('Push does not belong to user', array('code' => 105), null);
+                }
+            } else {
+                $context->addViolation('Push does not found', array('code' => 104), null);
+            }
+        }
+    }
+
+    /**
      * Checks that username is not already registered
      *
      * @param $date
@@ -280,4 +318,21 @@ class BaseValidator
     {
         return $this->user;
     }
+
+    /**
+     * @return \PushT\Bundle\MainBundle\Document\Job
+     */
+    public function getJob()
+    {
+        return $this->job;
+    }
+
+    /**
+     * @return \PushT\Bundle\MainBundle\Document\Push
+     */
+    public function getPush()
+    {
+        return $this->push;
+    }
+
 }

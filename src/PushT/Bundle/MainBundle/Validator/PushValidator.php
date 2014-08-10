@@ -59,4 +59,37 @@ class PushValidator extends BaseValidator
 
         return $violations;
     }
+
+    /**
+     * @param $input
+     * @return \Symfony\Component\Validator\ConstraintViolationListInterface
+     */
+    public function pushValidator($input)
+    {
+        $validator = Validation::createValidator();
+        $constraint = new Collection(array(
+            'pushtSecret' => array(
+                $this->getNotBlank('Secret Key'),
+                new Callback(array('methods' => array(
+                    array($this, 'checkSecretKey')
+                ))),
+            ),
+            'token' => array(
+                $this->getNotBlank('Token'),
+                new Callback(array('methods' => array(
+                    array($this, 'checkUserAuthorized')
+                ))),
+            ),
+            'pushId'  => array(
+                $this->getNotBlank('Push Id'),
+                new Callback(array('methods' => array(
+                    array($this, 'checkPush')
+                ))),
+            ),
+        ));
+
+        $violations = $validator->validateValue($input, $constraint);
+
+        return $violations;
+    }
 }

@@ -16,7 +16,6 @@ class JobCache extends BaseCache
         parent::__construct($container, 'job');
     }
 
-
     /**
      * @param $job Job
      */
@@ -38,6 +37,7 @@ class JobCache extends BaseCache
                 $this->setJob($job);
             }
         }
+
         return $job;
     }
 }

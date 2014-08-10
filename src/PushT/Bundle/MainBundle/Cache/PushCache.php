@@ -7,7 +7,6 @@
 
 namespace PushT\Bundle\MainBundle\Cache;
 
-
 use PushT\Bundle\MainBundle\Document\Push;
 
 class PushCache extends BaseCache
@@ -16,7 +15,6 @@ class PushCache extends BaseCache
     {
         parent::__construct($container, 'push');
     }
-
 
     /**
      * @param $push Push
@@ -39,6 +37,7 @@ class PushCache extends BaseCache
                 $this->setPush($push);
             }
         }
+
         return $push;
     }
 }

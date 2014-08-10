@@ -16,7 +16,6 @@ class UserCache extends BaseCache
         parent::__construct($container, 'user');
     }
 
-
     /**
      * @param $user User
      */
@@ -39,6 +38,7 @@ class UserCache extends BaseCache
             }
             $user = $user->toArray();
         }
+
         return $user;
     }
 }

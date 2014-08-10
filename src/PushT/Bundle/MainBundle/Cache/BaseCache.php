@@ -47,7 +47,7 @@ class BaseCache
         $this->redis->set($this->prefix.$key, $data);
     }
 
-    protected  function get($key)
+    protected function get($key)
     {
         $data = $this->redis->get($this->prefix.$key);
         if ($data) {

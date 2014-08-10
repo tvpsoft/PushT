@@ -17,7 +17,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 class PushController extends BaseApiController
 {
     /**
-     * @return array
+     * @return JsonResponse
      * @View()
      *
      * @ApiDoc(
@@ -81,6 +81,120 @@ class PushController extends BaseApiController
                 $this->publishPush($push);
             }
 
+            return new JsonResponse(
+                array(
+                    'success' => true
+                )
+            );
+        }
+    }
+
+    /**
+     * @param $pushId
+     * @return JsonResponse
+     * @View()
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Notify server that push is received",
+     *  parameters={
+     *      {"name"="PushT-Secret", "dataType"="string", "required"="true", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
+     *      {"name"="PushT-Token", "dataType"="string", "required"="true", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
+     *      {"name"="pushId", "dataType"="string", "required"="true", "description"="Push Id"},
+     *  }
+     * )
+     */
+    public function postPushReceiveAction($pushId)
+    {
+        $request = Request::createFromGlobals();
+        $data = array(
+            'pushtSecret'  => $request->headers->get('PushT-Secret'),
+            'token' => $request->headers->get('PushT-Token'),
+            'pushId'  => $pushId,
+        );
+        $pushValidator = $this->container->get('validator.push');
+        $violations = $pushValidator->pushValidator($data);
+        if ($violations->count()) {
+            return $pushValidator->error($violations);
+        } else {
+            $pushCache = $this->get('cache.push');
+            $jobCache  = $this->get('cache.job');
+
+            $push = $pushValidator->getPush();
+            $job  = $pushValidator->getJob();
+
+            if ($push->getStatus() != 1) {
+                $push->setStatus(1);
+            }
+
+            $push->setUpdatedAt(time());
+            $job->setUpdatedAt(time());
+
+            $this->getDm()->persist($push);
+            $this->getDm()->persist($job);
+            $this->getDm()->flush();
+
+            $pushCache->setPush($push);
+            $jobCache->setJob($job);
+
+            //TODO update solr
+            return new JsonResponse(
+                array(
+                    'success' => true
+                )
+            );
+        }
+    }
+
+    /**
+     * @param $pushId
+     * @return JsonResponse
+     * @View()
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Notify server that push is opened",
+     *  parameters={
+     *      {"name"="PushT-Secret", "dataType"="string", "required"="true", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
+     *      {"name"="PushT-Token", "dataType"="string", "required"="true", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
+     *      {"name"="pushId", "dataType"="string", "required"="true", "description"="Push Id"},
+     *  }
+     * )
+     */
+    public function postPushOpenAction($pushId)
+    {
+        $request = Request::createFromGlobals();
+        $data = array(
+            'pushtSecret'  => $request->headers->get('PushT-Secret'),
+            'token' => $request->headers->get('PushT-Token'),
+            'pushId'  => $pushId,
+        );
+        $pushValidator = $this->container->get('validator.push');
+        $violations = $pushValidator->pushValidator($data);
+        if ($violations->count()) {
+            return $pushValidator->error($violations);
+        } else {
+            $pushCache = $this->get('cache.push');
+            $jobCache  = $this->get('cache.job');
+
+            $push = $pushValidator->getPush();
+            $job  = $pushValidator->getJob();
+
+            if ($push->getStatus() == 1) {
+                $push->setStatus(6);
+            }
+
+            $push->setUpdatedAt(time());
+            $job->setUpdatedAt(time());
+
+            $this->getDm()->persist($push);
+            $this->getDm()->persist($job);
+            $this->getDm()->flush();
+
+            $pushCache->setPush($push);
+            $jobCache->setJob($job);
+
+            //TODO update solr
             return new JsonResponse(
                 array(
                     'success' => true

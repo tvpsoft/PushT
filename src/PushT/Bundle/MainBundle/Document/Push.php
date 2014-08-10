@@ -52,6 +52,7 @@ class Push
      * 3 => Deleted Device,
      * 4 => Invalid Api Key - Waiting,
      * 5 => Out of bounce
+     * 6 => Opened
      */
     protected $status;
 
@@ -202,7 +203,5 @@ class Push
     {
         return $this->bounce;
     }
-
-
 
 }
