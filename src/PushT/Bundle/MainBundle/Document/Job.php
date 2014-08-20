@@ -210,4 +210,18 @@ class Job
         return $this->userId;
     }
 
+    public function toArray()
+    {
+        return array(
+            'id'        => $this->getId(),
+            'userId'    => $this->getUserId(),
+            'createdAt' => $this->getCreatedAt(),
+            'updatedAt' => $this->getUpdatedAt(),
+            'pushKey'   => $this->getPushKey(),
+            'data'      => $this->getData(),
+            'collapseKey'   => $this->getCollapseKey(),
+            'timeToLive'    => $this->getTimeToLive()
+        );
+    }
+
 }

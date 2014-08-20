@@ -239,6 +239,41 @@ class BaseValidator
     }
 
     /**
+     * Checks that job exist
+     *
+     * @param $jobId
+     * @param $context LegacyExecutionContext
+     */
+    public function checkJobExist($jobId, $context)
+    {
+        $job = $this->getDm()->getRepository('MainBundle:Job')->find($jobId);
+
+        if ($job) {
+            $this->job = $job;
+        } else {
+            $context->addViolation('Job does not exist', array('code' => 108), null);
+        }
+    }
+
+    /**
+     * Checks that job belong to user
+     *
+     * @param $jobId
+     * @param $context LegacyExecutionContext
+     */
+    public function checkJobBelong($jobId, $context)
+    {
+        $job = $this->getJob();
+        $user = $this->getUser();
+
+        if ($job && $user) {
+            if ($job->getUserId() != $user->getId()) {
+                $context->addViolation('Job does not belong to this user', array('code' => 109), null);
+            }
+        }
+    }
+
+    /**
      * Checks that username is not already registered
      *
      * @param $date

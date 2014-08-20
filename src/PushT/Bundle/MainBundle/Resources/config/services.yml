@@ -12,10 +12,18 @@ services:
           arguments:
               container: "@service_container"
               securityContext: "@security.context"
+              securityContext: "@security.context"
+  validator.job:
+          class: PushT\Bundle\MainBundle\Validator\JobValidator
+          arguments:
+              container: "@service_container"
+              securityContext: "@security.context"
+
   rabbitmq.push.service:
                   class: PushT\Bundle\MainBundle\Consumer\PushConsumer
                   arguments:
                       container: "@service_container"
+
   cache.job:
           class: PushT\Bundle\MainBundle\Cache\JobCache
           arguments:

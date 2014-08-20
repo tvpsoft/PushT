@@ -9,3 +9,9 @@ push:
     prefix: /v1
     resource: @ApiBundle/Controller/PushController.php
     name_prefix:  api_1_
+
+job:
+    type: rest
+    prefix: /v1
+    resource: @ApiBundle/Controller/JobController.php
+    name_prefix:  api_1_

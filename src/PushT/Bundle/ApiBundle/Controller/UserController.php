@@ -26,11 +26,11 @@ class UserController extends BaseApiController
      *  resource=true,
      *  description="Register User",
      *  parameters={
-     *      {"name"="PushT-Secret", "dataType"="string", "required"="true", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
-     *      {"name"="name", "dataType"="string", "required"="false"},
-     *      {"name"="surname", "dataType"="string", "required"="false"},
-     *      {"name"="password", "dataType"="string", "required"="false"},
-     *      {"name"="email", "dataType"="string", "required"="false"}
+     *      {"name"="PushT-Secret", "dataType"="", "required"="true", "format"="SECRET", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
+     *      {"name"="name", "dataType"="", "required"="false", "format"="token"},
+     *      {"name"="surname", "dataType"="", "required"="false", "format"="String"},
+     *      {"name"="password", "dataType"="", "required"="false", "format"="String"},
+     *      {"name"="email", "dataType"="", "required"="false", "format"="String"}
      *  }
      * )
      */
@@ -94,11 +94,11 @@ class UserController extends BaseApiController
      *  resource=true,
      *  description="Authorize user with token or email+password or username+password",
      *  parameters={
-     *      {"name"="PushT-Secret", "dataType"="string", "required"="true", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
-     *      {"name"="token", "dataType"="string", "required"="false"},
-     *      {"name"="username", "dataType"="string", "required"="false"},
-     *      {"name"="password", "dataType"="string", "required"="false"},
-     *      {"name"="email", "dataType"="string", "required"="false"}
+     *      {"name"="PushT-Secret", "dataType"="", "required"="true", "format"="SECRET", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
+     *      {"name"="token", "dataType"="", "required"="false", "format"="TOKEN"},
+     *      {"name"="username", "dataType"="", "required"="false", "format"="String"},
+     *      {"name"="password", "dataType"="", "required"="false", "format"="String"},
+     *      {"name"="email", "dataType"="", "required"="false", "format"="String"}
      *  }
      * )
      */
@@ -172,9 +172,9 @@ class UserController extends BaseApiController
      *  resource=true,
      *  description="User Settings GCM Api Key etc.",
      *  parameters={
-     *      {"name"="PushT-Secret", "dataType"="string", "required"="true", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
-     *      {"name"="PushT-Token", "dataType"="string", "required"="true", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
-     *      {"name"="gcmApiKey", "dataType"="string", "required"="false"},
+     *      {"name"="PushT-Secret", "dataType"="", "required"="true", "format"="SECRET", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
+     *      {"name"="PushT-Token", "dataType"="", "required"="true", "format"="TOKEN", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
+     *      {"name"="gcmApiKey", "dataType"="", "required"="false", "format"="String"},
      *  }
      * )
      */

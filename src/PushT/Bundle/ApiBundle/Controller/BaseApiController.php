@@ -20,6 +20,12 @@ class BaseApiController extends FOSRestController
     /** @var  DocumentRepository */
     private $userTable;
 
+    /** @var  DocumentRepository */
+    private $jobTable;
+
+    /** @var  DocumentRepository */
+    private $pushTable;
+
     /** @var  Producer */
     private $pushProducer;
 
@@ -45,6 +51,30 @@ class BaseApiController extends FOSRestController
         }
 
         return $this->userTable;
+    }
+
+    /**
+     * @return DocumentRepository
+     */
+    public function getJobTable()
+    {
+        if ($this->jobTable === null) {
+            $this->jobTable = $this->getDm()->getRepository('MainBundle:Job');
+        }
+
+        return $this->jobTable;
+    }
+
+    /**
+     * @return DocumentRepository
+     */
+    public function getPushTable()
+    {
+        if ($this->pushTable === null) {
+            $this->pushTable = $this->getDm()->getRepository('MainBundle:Push');
+        }
+
+        return $this->pushTable;
     }
 
     public function publishPush($data)

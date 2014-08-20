@@ -22,16 +22,16 @@ class PushController extends BaseApiController
      *
      * @ApiDoc(
      *  resource=true,
-     *  description="User Settings GCM Api Key etc.",
+     *  description="Post Push",
      *  parameters={
-     *      {"name"="PushT-Secret", "dataType"="string", "required"="true", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
-     *      {"name"="PushT-Token", "dataType"="string", "required"="true", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
-     *      {"name"="type", "dataType"="integer", "required"="true", "description"="Type of device to send 0 => Android, 1 => IOS, 2 => Windows"},
-     *      {"name"="data", "dataType"="json string", "required"="true", "description"="Data that swift to user"},
-     *      {"name"="deviceTokens", "dataType"="array", "required"="true", "description"="Devices tokens to send"},
-     *      {"name"="collapseKey", "dataType"="string", "required"="false", "description"="GCM collapse key. NOT REQUIRED."},
-     *      {"name"="pushKey", "dataType"="string", "required"="false", "description"="Unique key to track group of push notification. NOT REQUIRED."},
-     *      {"name"="timeToLive", "dataType"="integer", "required"="false", "description"="GCM Time to live in seconds. Default 4 weeks. NOT REQUIRED."},
+     *      {"name"="PushT-Secret", "dataType"="", "required"="true", "format"="SECRET"},
+     *      {"name"="PushT-Token", "dataType"="", "required"="true", "format"="TOKEN"},
+     *      {"name"="type", "dataType"="", "required"="true", "format"="Integer", "description"="Type of device to send 0 => Android, 1 => IOS, 2 => Windows"},
+     *      {"name"="data", "dataType"="", "required"="true", "format"="Json String", "description"="Data that swift to user"},
+     *      {"name"="deviceTokens", "dataType"="", "required"="true", "format"="String Array", "description"="Devices tokens to send"},
+     *      {"name"="collapseKey", "dataType"="", "required"="false", "format"="String", "description"="GCM collapse key. NOT REQUIRED."},
+     *      {"name"="pushKey", "dataType"="", "required"="false", "format"="String", "description"="Unique key to track group of push notification. NOT REQUIRED."},
+     *      {"name"="timeToLive", "dataType"="", "required"="false", "format"="Integer", "description"="GCM Time to live in seconds. Default 4 weeks. NOT REQUIRED."},
      *  }
      * )
      */
@@ -83,7 +83,8 @@ class PushController extends BaseApiController
 
             return new JsonResponse(
                 array(
-                    'success' => true
+                    'success' => true,
+                    'jobId'   => $job->getId()
                 )
             );
         }
@@ -98,9 +99,9 @@ class PushController extends BaseApiController
      *  resource=true,
      *  description="Notify server that push is received",
      *  parameters={
-     *      {"name"="PushT-Secret", "dataType"="string", "required"="true", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
-     *      {"name"="PushT-Token", "dataType"="string", "required"="true", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
-     *      {"name"="pushId", "dataType"="string", "required"="true", "description"="Push Id"},
+     *      {"name"="PushT-Secret", "dataType"="", "required"="true", "format"="SECRET", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
+     *      {"name"="PushT-Token", "dataType"="", "required"="true", "format"="TOKEN", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
+     *      {"name"="pushId", "dataType"="", "required"="true", "format"="String", "description"="Push Id"},
      *  }
      * )
      */
@@ -155,9 +156,9 @@ class PushController extends BaseApiController
      *  resource=true,
      *  description="Notify server that push is opened",
      *  parameters={
-     *      {"name"="PushT-Secret", "dataType"="string", "required"="true", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
-     *      {"name"="PushT-Token", "dataType"="string", "required"="true", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
-     *      {"name"="pushId", "dataType"="string", "required"="true", "description"="Push Id"},
+     *      {"name"="PushT-Secret", "dataType"="", "required"="true", "format"="SECRET", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
+     *      {"name"="PushT-Token", "dataType"="", "required"="true", "format"="TOKEN", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
+     *      {"name"="pushId", "dataType"="", "required"="true", "format"="String", "description"="Push Id"},
      *  }
      * )
      */

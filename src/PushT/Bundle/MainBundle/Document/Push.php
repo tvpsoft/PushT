@@ -48,7 +48,7 @@ class Push
      * @MongoDB\Int
      * 0 => On Queue
      * 1 => Successfully Sent
-     * 2 => Requeued,
+     * 2 => Re-Queued,
      * 3 => Deleted Device,
      * 4 => Invalid Api Key - Waiting,
      * 5 => Out of bounce
@@ -60,6 +60,11 @@ class Push
      * @MongoDB\String
      */
     protected $errorMessage;
+
+    public static $statusTexts = array(
+        'On Queue', 'Successfully Sent', 'Re-Queued', 'Deleted Device',
+        'Invalid Api Key - Waiting', 'Out of Bounce', 'Opened'
+    );
 
     public function __construct()
     {
@@ -202,6 +207,29 @@ class Push
     public function getBounce()
     {
         return $this->bounce;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusText()
+    {
+        return self::$statusTexts[$this->getStatus()];
+    }
+
+    public function toArray()
+    {
+        return array(
+            'id'            => $this->getId(),
+            'jobId'         => $this->getJobId(),
+            'deviceToken'   => $this->getDeviceToken(),
+            'createdAt'     => $this->getCreatedAt(),
+            'updatedAt'     => $this->getUpdatedAt(),
+            'bounce'        => $this->getBounce(),
+            'status'        => $this->getStatus(),
+            'statusText'    => $this->getStatusText(),
+            'errorMessage'  => $this->getErrorMessage()
+        );
     }
 
 }
