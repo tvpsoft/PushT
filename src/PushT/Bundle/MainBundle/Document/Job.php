@@ -14,6 +14,9 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  */
 class Job
 {
+
+    private static $TYPE_TEXT = array('Android', 'IOS', 'Windows');
+
     /**
      * @MongoDB\Id(strategy="UUID")
      */
@@ -220,7 +223,9 @@ class Job
             'pushKey'   => $this->getPushKey(),
             'data'      => $this->getData(),
             'collapseKey'   => $this->getCollapseKey(),
-            'timeToLive'    => $this->getTimeToLive()
+            'timeToLive'    => $this->getTimeToLive(),
+            'type'          => $this->getType(),
+            'typeText'      => self::$TYPE_TEXT[$this->getType()]
         );
     }
 

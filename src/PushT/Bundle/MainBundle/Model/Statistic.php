@@ -34,8 +34,8 @@ class Statistic
             }
         }
 
-        $data['sentRate'] = floatval(sprintf('%.02F', ($data['count'][1] / $data['total']) * 100));
-        $data['openRate'] = floatval(sprintf('%.02F', ($data['count'][6] / $data['count'][1]) * 100));
+        $data['sentRate'] = ($data['total'])?floatval(sprintf('%.02F', ($data['count'][1] / $data['total']) * 100)):0;
+        $data['openRate'] = ($data['count'][1] > 0)?floatval(sprintf('%.02F', ($data['count'][6] / $data['count'][1]) * 100)):0;
 
         foreach ($data['count'] as $statusId => $count) {
             $data['count'][Push::$statusTexts[$statusId]] = $count;
