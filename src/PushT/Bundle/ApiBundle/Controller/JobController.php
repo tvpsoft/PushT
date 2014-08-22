@@ -44,8 +44,11 @@ class JobController extends BaseApiController
         } else {
             $user = $jobValidator->getUser();
 
+            $sort = array(
+                'createdAt' => ($request->query->get('sort', 'asc') == 'asc')? 'ASC' : 'DESC'
+            );
             //TODO Solr Integration
-            $jobs = $this->getJobTable()->findBy(array('userId' => $user->getId()));
+            $jobs = $this->getJobTable()->findBy(array('userId' => $user->getId()), $sort);
 
             $jobsData = array();
             /** @var Job $job */
