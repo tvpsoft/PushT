@@ -213,7 +213,10 @@ class Job
         return $this->userId;
     }
 
-    public function toArray()
+	/**
+	 * @return array
+	 */
+	public function toArray()
     {
         return array(
             'id'        => $this->getId(),
@@ -228,5 +231,21 @@ class Job
             'typeText'      => self::$TYPE_TEXT[$this->getType()]
         );
     }
+
+	/**
+	 * @return string
+	 */
+	public function getSound()
+	{
+		return (isset($this->data['sound']))? : 'default';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAlert()
+	{
+		return (isset($this->data['alert']))? : '';
+	}
 
 }

@@ -14,6 +14,9 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
     api.secret: ThisTokenIsNotSoSecretChangeIt
+    apple_push:
+            apns_cert: '/path/to/cert/cert-prod.pem'
+            apns_url: 'gateway.push.apple.com'
 
     debug_toolbar:          true
     debug_redirects:        false

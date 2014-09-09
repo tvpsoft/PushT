@@ -64,8 +64,8 @@ class PushConsumer implements ConsumerInterface
         if ($job->getType() == 0) {
             $push =  $this->sendPushToAndroid($job, $push);
         } elseif ($job->getType() == 1) {
-            //TODO send to IOS
-        } elseif ($job->getType() == 1) {
+            $push = $this->sendPushToIOS($job, $push);
+        } elseif ($job->getType() == 2) {
             //TODO send to Windows
         }
 
@@ -92,6 +92,8 @@ class PushConsumer implements ConsumerInterface
                 return true;
             case 4:
                 return true;
+			default:
+				return true;
         }
     }
 
@@ -158,6 +160,50 @@ class PushConsumer implements ConsumerInterface
 
         return $push;
     }
+
+	/**
+	 * @param $job Job
+	 * @param $push Push
+	 * @return Push
+	 */
+	public function sendPushToIOS($push, $job) {
+		$badge = 3;
+		$sound = $job->getSound();
+
+		$payload = array();
+		$payload['aps'] = array(
+			'alert' => $job->getAlert(),
+			'badge' => intval($badge),
+			'sound' => $sound,
+			'jobId' => $job->getId(),
+			'msgId' => $push->getId(),
+			'data' 	=> json_encode($job->getData())
+		);
+		$payload = json_encode($payload);
+
+		$applePush = $this->container->getParameter('apple_push');
+
+		$stream_context = stream_context_create();
+		stream_context_set_option($stream_context, 'ssl', 'local_cert', $applePush['apns_cert']);
+
+		$apns = stream_socket_client('ssl://' . $applePush['apns_url'] . ':' . 2195, $error, $errorString, 2, STREAM_CLIENT_CONNECT, $streamContext);
+
+		$apnsMessage = chr(0) . chr(0) . chr(32) . pack('H*', str_replace(' ', '', $push->getDeviceToken())) . chr(0) . chr(strlen($payload)) . $payload;
+		$fwrite = fwrite($apns, $apnsMessage);
+		if(!$fwrite) {
+			$push->setStatus(3);
+		} else {
+			$push->setStatus(1);
+		}
+
+
+		@socket_close($apns);
+		@fclose($apns);
+
+		echo 'IOS send'.PHP_EOL;
+
+		return $push;
+	}
 
     /**
      * @return DocumentManager
