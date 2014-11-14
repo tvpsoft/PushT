@@ -14,15 +14,14 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
     api.secret: ThisTokenIsNotSoSecretChangeIt
-    apple_push:
-            apns_cert: '/path/to/cert/cert-prod.pem'
-            apns_url: 'gateway.push.apple.com'
 
     debug_toolbar:          true
     debug_redirects:        false
     use_assetic_controller: true
 
     redis_server: redis://localhost
+    basepath: '/Users/mustafa/www/PushT'
+    mongo: 'mongodb://localhost:27017'
 
     rabbitmq_connection:
             default:

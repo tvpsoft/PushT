@@ -25,10 +25,14 @@ class User extends BaseUser
      */
     protected $androidGCMApiKey;
 
+	/**
+	 * @MongoDB\String
+	 */
+	protected $pamFile;
+
     public function __construct()
     {
         parent::__construct();
-        // your own logic
     }
 
     /**
@@ -69,8 +73,27 @@ class User extends BaseUser
             'userId'    => $this->getId(),
             'username'  => $this->getUsername(),
             'email'     => $this->getEmail(),
-            'googleApiKey' => $this->getAndroidGCMApiKey()
+            'googleApiKey' => $this->getAndroidGCMApiKey(),
+			'pamFile'	=> $this->getPamFile()
         );
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function getPamFile()
+	{
+		return $this->pamFile;
+	}
+
+	/**
+	 * @param mixed $pamFile
+	 */
+	public function setPamFile($pamFile)
+	{
+		$this->pamFile = $pamFile;
+	}
+
+
 
 }

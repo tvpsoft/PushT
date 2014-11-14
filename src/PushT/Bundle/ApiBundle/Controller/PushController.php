@@ -7,6 +7,8 @@
 
 namespace PushT\Bundle\ApiBundle\Controller;
 
+use PhpAmqpLib\Message\AMQPMessage;
+use PushT\Bundle\MainBundle\Consumer\PushConsumer;
 use PushT\Bundle\MainBundle\Document\Job;
 use PushT\Bundle\MainBundle\Document\Push;
 use Symfony\Component\HttpFoundation\JsonResponse;

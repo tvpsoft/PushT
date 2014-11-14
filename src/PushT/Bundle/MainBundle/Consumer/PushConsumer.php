@@ -64,7 +64,7 @@ class PushConsumer implements ConsumerInterface
         if ($job->getType() == 0) {
             $push =  $this->sendPushToAndroid($job, $push);
         } elseif ($job->getType() == 1) {
-            $push = $this->sendPushToIOS($job, $push);
+            $push = $this->sendPushToIOS($push, $job);
         } elseif ($job->getType() == 2) {
             //TODO send to Windows
         }
@@ -166,7 +166,7 @@ class PushConsumer implements ConsumerInterface
 	 * @param $push Push
 	 * @return Push
 	 */
-	public function sendPushToIOS($push, $job) {
+	public function sendPushToIOS(Push $push, Job $job) {
 		$badge = 3;
 		$sound = $job->getSound();
 
@@ -181,12 +181,13 @@ class PushConsumer implements ConsumerInterface
 		);
 		$payload = json_encode($payload);
 
-		$applePush = $this->container->getParameter('apple_push');
+		$user = $this->getUserCache()->getUser($job->getUserId());
+		$pamFile = $this->container->getParameter('basepath').$user['pamFile'];
 
 		$stream_context = stream_context_create();
-		stream_context_set_option($stream_context, 'ssl', 'local_cert', $applePush['apns_cert']);
+		stream_context_set_option($stream_context, 'ssl', 'local_cert', $pamFile);
 
-		$apns = stream_socket_client('ssl://' . $applePush['apns_url'] . ':' . 2195, $error, $errorString, 2, STREAM_CLIENT_CONNECT, $streamContext);
+		$apns = stream_socket_client('ssl://gateway.push.apple.com:' . 2195, $error, $errorString, 2, STREAM_CLIENT_CONNECT, $streamContext);
 
 		$apnsMessage = chr(0) . chr(0) . chr(32) . pack('H*', str_replace(' ', '', $push->getDeviceToken())) . chr(0) . chr(strlen($payload)) . $payload;
 		$fwrite = fwrite($apns, $apnsMessage);

@@ -9,6 +9,7 @@ namespace PushT\Bundle\ApiBundle\Controller;
 
 use PushT\Bundle\MainBundle\Document\User;
 use PushT\Bundle\MainBundle\Model\Helper;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\View;
@@ -170,11 +171,12 @@ class UserController extends BaseApiController
      *
      * @ApiDoc(
      *  resource=true,
-     *  description="User Settings GCM Api Key etc.",
+     *  description="User Settings GCM Api Key, Pam File etc.",
      *  parameters={
      *      {"name"="PushT-Secret", "dataType"="", "required"="true", "format"="SECRET", "description"="RjbpWbpG14ZRyjsqHoAt412ThvkNQ5Au"},
      *      {"name"="PushT-Token", "dataType"="", "required"="true", "format"="TOKEN", "description"="7ESfyHBmABwxsp0ut7XQaNh9xn0iVbb3Q3joLULlwiTYHTtb1r2beklMIm5DxgHnk0M5VyrrQlqyeTKgkMrz7NlP9rtHIb52bS87"},
      *      {"name"="gcmApiKey", "dataType"="", "required"="false", "format"="String"},
+	 *      {"name"="pamFile", "dataType"="", "required"="false", "format"="File"},
      *  }
      * )
      */
@@ -196,6 +198,16 @@ class UserController extends BaseApiController
             if ($request->request->has('gcmApiKey')) {
                 $user->setAndroidGCMApiKey($request->request->get('gcmApiKey'));
             }
+
+
+			if ($request->files->has('pamFile')) {
+				/** @var UploadedFile $pamFile */
+				$pamFile = $request->files->get('pamFile');
+				$fileName = Helper::randomString(10);
+				$pamFile->move($this->container->getParameter('basepath').'/pam/', $fileName);
+				$user->setPamFile($fileName);
+			}
+
 
             $this->getDm()->persist($user);
             $this->getDm()->flush();

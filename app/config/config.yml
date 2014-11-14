@@ -75,7 +75,7 @@ fos_user:
 doctrine_mongodb:
     connections:
         default:
-            server: mongodb://localhost:27017
+            server: %mongo%
             options: {}
     default_database: PushT
     document_managers:

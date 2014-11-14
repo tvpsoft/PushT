@@ -228,7 +228,8 @@ class Job
             'collapseKey'   => $this->getCollapseKey(),
             'timeToLive'    => $this->getTimeToLive(),
             'type'          => $this->getType(),
-            'typeText'      => self::$TYPE_TEXT[$this->getType()]
+            'typeText'      => self::$TYPE_TEXT[$this->getType()],
+			'sound'		=> $this->getSound()
         );
     }
 
